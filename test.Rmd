@@ -16,3 +16,176 @@ Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by press
 When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Ctrl+Shift+K* to preview the HTML file).
 
 The preview shows you a rendered HTML copy of the contents of the editor. Consequently, unlike *Knit*, *Preview* does not run any R code chunks. Instead, the output of the chunk when it was last run in the editor is displayed.
+
+2.2.1 objects
+suppose a high school student asks us for gelp solving several quadratic equations of the form ax^2+bx+c=0. The quadratic formula gives us the solutions. which of course change depending on the values of a, b, and c. one advantages of programming languages is that we can define variables and write expressions with these variables, similar to haw we do so in math, but obtain a numeric solution. We will write out general code for the quadratic equation below, but if we are asked to solve x^2+x-1=0, then we defime:
+
+a <- 1
+b <- 1
+c <- -1
+
+To see the value stored in a variable, we simply ask R to evaluate *a* and it shows the stored value:
+
+a
+
+A more explicit way to ask R to show us the value stored in *a* is using *print* like this:
+
+print(a)
+
+As we define objects in the console, we are acutally changing the workspace. You can see all the variables saved in your workspace by typin:
+
+ls
+ls()
+
+Now since these values are saved in variables, to obtain a solution to our equation, we use the quadratic formula:
+
+{-b + sqrt(b^2 - 4*a*c) } / ( 2*a )
+{-b + sqrt(b^2 - 4*a*c) } / ( 2*a)
+
+2.2.3 Functions
+
+In general, we need to use parentheses to evauate a function. If you type *ls*, the function is not evaluated and instead R shows you the code that defines the function. If you type *ls()* the function is evaluated and, as seen above, we see objects in the workspace.
+Unlike *ls*, most functions require one or more arguments. Below is an example of how we assign an object to the argument of the function *log*. Remember that we earlier defined *a* to be 1:
+
+log(8)
+log(a)
+
+you can find out what the function expects and what it does by reviewing the very useful manuals included in R. you can get help by using the *help* function like this:
+
+help("log")
+
+for most functions, we can also use this shorthand:
+
+?log
+
+you can determine which arguments are optional by noting in the help document that a default value is assigned with *=*. Defining these is optional. For example, the base of the function *log* defaults to *base=exp(1)* making *log* the natural log by default.
+if you want a quick look at the arguments without opening the help system, you can type:
+
+args(log)
+
+you can change the default values by simply assgining another object: 
+
+log(8, base=2)
+
+Note that we have not been specifying the argument *x* as such:
+
+log(x=8, base=2)
+
+the above code works, but we can save ourselves some typeing: if no argument name is used, R assumes you are entering arguments in the order shown in the help file or by *args*. so by not using the names, it assumes the arguments are *x* followed by *base*:
+
+log(8,2)
+
+if using the arguments' names, then we can include them in whatever order we want:
+
+log(base=2, x=8)
+
+To specify arguments, we must see *=*, and cannot use *<-*.
+there are some exceptions to the rule that functions need the parenthesis to be evaluated. Amont these, the most commonly used are the arithmetic and relational operators. For example: 
+
+2^3
+
+you can see the arithmetic operators by typing:
+
+help("+")
+
+or
+
+?"+"
+
+and the relational operators by typing:
+
+help(">")
+
+or 
+
+?">"
+
+2.2.4 other prebuilt objects
+
+there are several datasets that are included for users to practice and test out functions. you can see all the variables datasets by typing:
+
+data()
+
+This shows you the object name for these datasets. these datasets are objects that can be used by simply typing the name. for example, if you type:
+
+co2
+
+other prebuilt objects are mathematical quantities, such as the constant pi and infinite:
+
+pi
+Inf+1
+
+2.2.5 variable names
+
+A nice convention to follow is to use meaningful words that describe what is stored, use only lower case, and use underscores as a substitute for spaces. for the quadratic equations, we could use something like this:
+
+solution_1 <- (-b+sqrt(b^2-4*a*c))/(2*a)
+solution_2 <- (-b-sqrt(b^2-4*a*c))/(2*a)
+
+save
+
+2.2.7 motivating scripts
+
+To solve another equation such as 3x^2+2x-1, we can copy and paste the code above and then redefine the variables and recompute the solution:
+
+a<- 3
+b<- 2
+c<- -1
+
+(-b+sqrt(b^2-4*a*c))/(2*a)
+(-b-sqrt(b^2-4*a*c))/(2*a)
+
+2.2.8 commenting your code
+
+if a line of R code starts with the symbol *#*, it is not evaluated. we can use this to write reminders of why we wrote particular code. For example, in the scrip above we could add:
+
+## code to compute solution to quadradic equation of the form ax^2+bx+c
+## define the variables
+a<- 3
+b<- 2
+c<- -1
+
+## now compute the solution
+(-b+sqrt(b^2-4*a*c))/(2*a)
+(-b-sqrt(b^2-4*a*c))/(2*a)
+
+2.3 exercises
+
+1. what is the sum of the first 100 positive  integers? the formula for the sum of integers 1 through n is n(n+1)/2. define n=100 and then use R to compute the sum of 1 through 100 using the formula. what is the sum?
+
+n<- 100
+solution_1 <- {n*(n+1)}/2
+
+2. Now use the same formula the sum of the integers from ! through 1000.
+
+n<- 1000
+solution_1 <- {n*(n+1)}/2
+
+3. look at the result of typing the following code into R:
+
+n<- 1000
+x<- seq(1,n)
+sum(x)
+
+Based on the result, what do you think the functions *seq* and *sum* do? you can use *help*
+
+answer: b
+
+4. In math and programming, we say that we evaluate a function when we replace the argument with a given number. so if we type *sqrt(4)*, we evaluate the *sqrt* function. In R, you can evaluate a function inside another function. The evaluation happen from the inside out. use one line of code to compute the log. in base 10, of the square root of 100.
+
+log(sqrt(100), base=10)
+
+5. which of the following will always return the numeric value stored in *x*? you can try out examples and use the help system if you want.
+
+?"exp"
+
+log10(x^10)
+log(10^x)
+log(exp(x))
+exp(log(x, base=2))
+
+log(10)
+
+answer: c
+
+2.4 Data types

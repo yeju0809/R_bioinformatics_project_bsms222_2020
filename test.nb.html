@@ -1761,9 +1761,101 @@ summary {
 <p>Add a new chunk by clicking the <em>Insert Chunk</em> button on the toolbar or by pressing <em>Ctrl+Alt+I</em>.</p>
 <p>When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the <em>Preview</em> button or press <em>Ctrl+Shift+K</em> to preview the HTML file).</p>
 <p>The preview shows you a rendered HTML copy of the contents of the editor. Consequently, unlike <em>Knit</em>, <em>Preview</em> does not run any R code chunks. Instead, the output of the chunk when it was last run in the editor is displayed.</p>
+<p>2.2.1 objects suppose a high school student asks us for gelp solving several quadratic equations of the form ax^2+bx+c=0. The quadratic formula gives us the solutions. which of course change depending on the values of a, b, and c. one advantages of programming languages is that we can define variables and write expressions with these variables, similar to haw we do so in math, but obtain a numeric solution. We will write out general code for the quadratic equation below, but if we are asked to solve x^2+x-1=0, then we defime:</p>
+<p>a &lt;- 1 b &lt;- 1 c &lt;- -1</p>
+<p>To see the value stored in a variable, we simply ask R to evaluate <em>a</em> and it shows the stored value:</p>
+<p>a</p>
+<p>A more explicit way to ask R to show us the value stored in <em>a</em> is using <em>print</em> like this:</p>
+<p>print(a)</p>
+<p>As we define objects in the console, we are acutally changing the workspace. You can see all the variables saved in your workspace by typin:</p>
+<p>ls ls()</p>
+<p>Now since these values are saved in variables, to obtain a solution to our equation, we use the quadratic formula:</p>
+<p>{-b + sqrt(b^2 - 4<em>a</em>c) } / ( 2<em>a ) {-b + sqrt(b^2 - 4</em>a<em>c) } / ( 2</em>a)</p>
+<p>2.2.3 Functions</p>
+<p>In general, we need to use parentheses to evauate a function. If you type <em>ls</em>, the function is not evaluated and instead R shows you the code that defines the function. If you type <em>ls()</em> the function is evaluated and, as seen above, we see objects in the workspace. Unlike <em>ls</em>, most functions require one or more arguments. Below is an example of how we assign an object to the argument of the function <em>log</em>. Remember that we earlier defined <em>a</em> to be 1:</p>
+<p>log(8) log(a)</p>
+<p>you can find out what the function expects and what it does by reviewing the very useful manuals included in R. you can get help by using the <em>help</em> function like this:</p>
+<p>help(“log”)</p>
+<p>for most functions, we can also use this shorthand:</p>
+<p>?log</p>
+<p>you can determine which arguments are optional by noting in the help document that a default value is assigned with <em>=</em>. Defining these is optional. For example, the base of the function <em>log</em> defaults to <em>base=exp(1)</em> making <em>log</em> the natural log by default. if you want a quick look at the arguments without opening the help system, you can type:</p>
+<p>args(log)</p>
+<p>you can change the default values by simply assgining another object:</p>
+<p>log(8, base=2)</p>
+<p>Note that we have not been specifying the argument <em>x</em> as such:</p>
+<p>log(x=8, base=2)</p>
+<p>the above code works, but we can save ourselves some typeing: if no argument name is used, R assumes you are entering arguments in the order shown in the help file or by <em>args</em>. so by not using the names, it assumes the arguments are <em>x</em> followed by <em>base</em>:</p>
+<p>log(8,2)</p>
+<p>if using the arguments’ names, then we can include them in whatever order we want:</p>
+<p>log(base=2, x=8)</p>
+<p>To specify arguments, we must see <em>=</em>, and cannot use <em>&lt;-</em>. there are some exceptions to the rule that functions need the parenthesis to be evaluated. Amont these, the most commonly used are the arithmetic and relational operators. For example:</p>
+<p>2^3</p>
+<p>you can see the arithmetic operators by typing:</p>
+<p>help(“+”)</p>
+<p>or</p>
+<p>?“+”</p>
+<p>and the relational operators by typing:</p>
+<p>help(“&gt;”)</p>
+<p>or</p>
+<p>?“&gt;”</p>
+<p>2.2.4 other prebuilt objects</p>
+<p>there are several datasets that are included for users to practice and test out functions. you can see all the variables datasets by typing:</p>
+<p>data()</p>
+<p>This shows you the object name for these datasets. these datasets are objects that can be used by simply typing the name. for example, if you type:</p>
+<p>co2</p>
+<p>other prebuilt objects are mathematical quantities, such as the constant pi and infinite:</p>
+<p>pi Inf+1</p>
+<p>2.2.5 variable names</p>
+<p>A nice convention to follow is to use meaningful words that describe what is stored, use only lower case, and use underscores as a substitute for spaces. for the quadratic equations, we could use something like this:</p>
+<p>solution_1 &lt;- (-b+sqrt(b^2-4<em>a</em>c))/(2<em>a) solution_2 &lt;- (-b-sqrt(b^2-4</em>a<em>c))/(2</em>a)</p>
+<p>save</p>
+<p>2.2.7 motivating scripts</p>
+<p>To solve another equation such as 3x^2+2x-1, we can copy and paste the code above and then redefine the variables and recompute the solution:</p>
+<p>a&lt;- 3 b&lt;- 2 c&lt;- -1</p>
+<p>(-b+sqrt(b^2-4<em>a</em>c))/(2<em>a) (-b-sqrt(b^2-4</em>a<em>c))/(2</em>a)</p>
+<p>2.2.8 commenting your code</p>
+<p>if a line of R code starts with the symbol <em>#</em>, it is not evaluated. we can use this to write reminders of why we wrote particular code. For example, in the scrip above we could add:</p>
+<div id="code-to-compute-solution-to-quadradic-equation-of-the-form-ax2bxc" class="section level2">
+<h2>code to compute solution to quadradic equation of the form ax^2+bx+c</h2>
+</div>
+<div id="define-the-variables" class="section level2">
+<h2>define the variables</h2>
+<p>a&lt;- 3 b&lt;- 2 c&lt;- -1</p>
+</div>
+<div id="now-compute-the-solution" class="section level2">
+<h2>now compute the solution</h2>
+<p>(-b+sqrt(b^2-4<em>a</em>c))/(2<em>a) (-b-sqrt(b^2-4</em>a<em>c))/(2</em>a)</p>
+<p>2.3 exercises</p>
+<ol style="list-style-type: decimal">
+<li>what is the sum of the first 100 positive integers? the formula for the sum of integers 1 through n is n(n+1)/2. define n=100 and then use R to compute the sum of 1 through 100 using the formula. what is the sum?</li>
+</ol>
+<p>n&lt;- 100 solution_1 &lt;- {n*(n+1)}/2</p>
+<ol start="2" style="list-style-type: decimal">
+<li>Now use the same formula the sum of the integers from ! through 1000.</li>
+</ol>
+<p>n&lt;- 1000 solution_1 &lt;- {n*(n+1)}/2</p>
+<ol start="3" style="list-style-type: decimal">
+<li>look at the result of typing the following code into R:</li>
+</ol>
+<p>n&lt;- 1000 x&lt;- seq(1,n) sum(x)</p>
+<p>Based on the result, what do you think the functions <em>seq</em> and <em>sum</em> do? you can use <em>help</em></p>
+<p>answer: b</p>
+<ol start="4" style="list-style-type: decimal">
+<li>In math and programming, we say that we evaluate a function when we replace the argument with a given number. so if we type <em>sqrt(4)</em>, we evaluate the <em>sqrt</em> function. In R, you can evaluate a function inside another function. The evaluation happen from the inside out. use one line of code to compute the log. in base 10, of the square root of 100.</li>
+</ol>
+<p>log(sqrt(100), base=10)</p>
+<ol start="5" style="list-style-type: decimal">
+<li>which of the following will always return the numeric value stored in <em>x</em>? you can try out examples and use the help system if you want.</li>
+</ol>
+<p>?“exp”</p>
+<p>log10(x<sup>10) log(10</sup>x) log(exp(x)) exp(log(x, base=2))</p>
+<p>log(10)</p>
+<p>answer: c</p>
+<p>2.4 Data types</p>
 <!-- rnb-text-end -->
+</div>
 
-<div id="rmd-source-code">LS0tCnRpdGxlOiAiUiBOb3RlYm9vayIKb3V0cHV0OiBodG1sX25vdGVib29rCi0tLQoKVGhpcyBpcyBhbiBbUiBNYXJrZG93bl0oaHR0cDovL3JtYXJrZG93bi5yc3R1ZGlvLmNvbSkgTm90ZWJvb2suIFdoZW4geW91IGV4ZWN1dGUgY29kZSB3aXRoaW4gdGhlIG5vdGVib29rLCB0aGUgcmVzdWx0cyBhcHBlYXIgYmVuZWF0aCB0aGUgY29kZS4gCgpUcnkgZXhlY3V0aW5nIHRoaXMgY2h1bmsgYnkgY2xpY2tpbmcgdGhlICpSdW4qIGJ1dHRvbiB3aXRoaW4gdGhlIGNodW5rIG9yIGJ5IHBsYWNpbmcgeW91ciBjdXJzb3IgaW5zaWRlIGl0IGFuZCBwcmVzc2luZyAqQ3RybCtTaGlmdCtFbnRlciouIAoKYGBge3J9CnBsb3QoY2FycykKYGBgCgpBZGQgYSBuZXcgY2h1bmsgYnkgY2xpY2tpbmcgdGhlICpJbnNlcnQgQ2h1bmsqIGJ1dHRvbiBvbiB0aGUgdG9vbGJhciBvciBieSBwcmVzc2luZyAqQ3RybCtBbHQrSSouCgpXaGVuIHlvdSBzYXZlIHRoZSBub3RlYm9vaywgYW4gSFRNTCBmaWxlIGNvbnRhaW5pbmcgdGhlIGNvZGUgYW5kIG91dHB1dCB3aWxsIGJlIHNhdmVkIGFsb25nc2lkZSBpdCAoY2xpY2sgdGhlICpQcmV2aWV3KiBidXR0b24gb3IgcHJlc3MgKkN0cmwrU2hpZnQrSyogdG8gcHJldmlldyB0aGUgSFRNTCBmaWxlKS4KClRoZSBwcmV2aWV3IHNob3dzIHlvdSBhIHJlbmRlcmVkIEhUTUwgY29weSBvZiB0aGUgY29udGVudHMgb2YgdGhlIGVkaXRvci4gQ29uc2VxdWVudGx5LCB1bmxpa2UgKktuaXQqLCAqUHJldmlldyogZG9lcyBub3QgcnVuIGFueSBSIGNvZGUgY2h1bmtzLiBJbnN0ZWFkLCB0aGUgb3V0cHV0IG9mIHRoZSBjaHVuayB3aGVuIGl0IHdhcyBsYXN0IHJ1biBpbiB0aGUgZWRpdG9yIGlzIGRpc3BsYXllZC4K</div>
+<div id="rmd-source-code">LS0tCnRpdGxlOiAiUiBOb3RlYm9vayIKb3V0cHV0OiBodG1sX25vdGVib29rCi0tLQoKVGhpcyBpcyBhbiBbUiBNYXJrZG93bl0oaHR0cDovL3JtYXJrZG93bi5yc3R1ZGlvLmNvbSkgTm90ZWJvb2suIFdoZW4geW91IGV4ZWN1dGUgY29kZSB3aXRoaW4gdGhlIG5vdGVib29rLCB0aGUgcmVzdWx0cyBhcHBlYXIgYmVuZWF0aCB0aGUgY29kZS4gCgpUcnkgZXhlY3V0aW5nIHRoaXMgY2h1bmsgYnkgY2xpY2tpbmcgdGhlICpSdW4qIGJ1dHRvbiB3aXRoaW4gdGhlIGNodW5rIG9yIGJ5IHBsYWNpbmcgeW91ciBjdXJzb3IgaW5zaWRlIGl0IGFuZCBwcmVzc2luZyAqQ3RybCtTaGlmdCtFbnRlciouIAoKYGBge3J9CnBsb3QoY2FycykKYGBgCgpBZGQgYSBuZXcgY2h1bmsgYnkgY2xpY2tpbmcgdGhlICpJbnNlcnQgQ2h1bmsqIGJ1dHRvbiBvbiB0aGUgdG9vbGJhciBvciBieSBwcmVzc2luZyAqQ3RybCtBbHQrSSouCgpXaGVuIHlvdSBzYXZlIHRoZSBub3RlYm9vaywgYW4gSFRNTCBmaWxlIGNvbnRhaW5pbmcgdGhlIGNvZGUgYW5kIG91dHB1dCB3aWxsIGJlIHNhdmVkIGFsb25nc2lkZSBpdCAoY2xpY2sgdGhlICpQcmV2aWV3KiBidXR0b24gb3IgcHJlc3MgKkN0cmwrU2hpZnQrSyogdG8gcHJldmlldyB0aGUgSFRNTCBmaWxlKS4KClRoZSBwcmV2aWV3IHNob3dzIHlvdSBhIHJlbmRlcmVkIEhUTUwgY29weSBvZiB0aGUgY29udGVudHMgb2YgdGhlIGVkaXRvci4gQ29uc2VxdWVudGx5LCB1bmxpa2UgKktuaXQqLCAqUHJldmlldyogZG9lcyBub3QgcnVuIGFueSBSIGNvZGUgY2h1bmtzLiBJbnN0ZWFkLCB0aGUgb3V0cHV0IG9mIHRoZSBjaHVuayB3aGVuIGl0IHdhcyBsYXN0IHJ1biBpbiB0aGUgZWRpdG9yIGlzIGRpc3BsYXllZC4KCjIuMi4xIG9iamVjdHMKc3VwcG9zZSBhIGhpZ2ggc2Nob29sIHN0dWRlbnQgYXNrcyB1cyBmb3IgZ2VscCBzb2x2aW5nIHNldmVyYWwgcXVhZHJhdGljIGVxdWF0aW9ucyBvZiB0aGUgZm9ybSBheF4yK2J4K2M9MC4gVGhlIHF1YWRyYXRpYyBmb3JtdWxhIGdpdmVzIHVzIHRoZSBzb2x1dGlvbnMuIHdoaWNoIG9mIGNvdXJzZSBjaGFuZ2UgZGVwZW5kaW5nIG9uIHRoZSB2YWx1ZXMgb2YgYSwgYiwgYW5kIGMuIG9uZSBhZHZhbnRhZ2VzIG9mIHByb2dyYW1taW5nIGxhbmd1YWdlcyBpcyB0aGF0IHdlIGNhbiBkZWZpbmUgdmFyaWFibGVzIGFuZCB3cml0ZSBleHByZXNzaW9ucyB3aXRoIHRoZXNlIHZhcmlhYmxlcywgc2ltaWxhciB0byBoYXcgd2UgZG8gc28gaW4gbWF0aCwgYnV0IG9idGFpbiBhIG51bWVyaWMgc29sdXRpb24uIFdlIHdpbGwgd3JpdGUgb3V0IGdlbmVyYWwgY29kZSBmb3IgdGhlIHF1YWRyYXRpYyBlcXVhdGlvbiBiZWxvdywgYnV0IGlmIHdlIGFyZSBhc2tlZCB0byBzb2x2ZSB4XjIreC0xPTAsIHRoZW4gd2UgZGVmaW1lOgoKYSA8LSAxCmIgPC0gMQpjIDwtIC0xCgpUbyBzZWUgdGhlIHZhbHVlIHN0b3JlZCBpbiBhIHZhcmlhYmxlLCB3ZSBzaW1wbHkgYXNrIFIgdG8gZXZhbHVhdGUgKmEqIGFuZCBpdCBzaG93cyB0aGUgc3RvcmVkIHZhbHVlOgoKYQoKQSBtb3JlIGV4cGxpY2l0IHdheSB0byBhc2sgUiB0byBzaG93IHVzIHRoZSB2YWx1ZSBzdG9yZWQgaW4gKmEqIGlzIHVzaW5nICpwcmludCogbGlrZSB0aGlzOgoKcHJpbnQoYSkKCkFzIHdlIGRlZmluZSBvYmplY3RzIGluIHRoZSBjb25zb2xlLCB3ZSBhcmUgYWN1dGFsbHkgY2hhbmdpbmcgdGhlIHdvcmtzcGFjZS4gWW91IGNhbiBzZWUgYWxsIHRoZSB2YXJpYWJsZXMgc2F2ZWQgaW4geW91ciB3b3Jrc3BhY2UgYnkgdHlwaW46CgpscwpscygpCgpOb3cgc2luY2UgdGhlc2UgdmFsdWVzIGFyZSBzYXZlZCBpbiB2YXJpYWJsZXMsIHRvIG9idGFpbiBhIHNvbHV0aW9uIHRvIG91ciBlcXVhdGlvbiwgd2UgdXNlIHRoZSBxdWFkcmF0aWMgZm9ybXVsYToKCnstYiArIHNxcnQoYl4yIC0gNCphKmMpIH0gLyAoIDIqYSApCnstYiArIHNxcnQoYl4yIC0gNCphKmMpIH0gLyAoIDIqYSkKCjIuMi4zIEZ1bmN0aW9ucwoKSW4gZ2VuZXJhbCwgd2UgbmVlZCB0byB1c2UgcGFyZW50aGVzZXMgdG8gZXZhdWF0ZSBhIGZ1bmN0aW9uLiBJZiB5b3UgdHlwZSAqbHMqLCB0aGUgZnVuY3Rpb24gaXMgbm90IGV2YWx1YXRlZCBhbmQgaW5zdGVhZCBSIHNob3dzIHlvdSB0aGUgY29kZSB0aGF0IGRlZmluZXMgdGhlIGZ1bmN0aW9uLiBJZiB5b3UgdHlwZSAqbHMoKSogdGhlIGZ1bmN0aW9uIGlzIGV2YWx1YXRlZCBhbmQsIGFzIHNlZW4gYWJvdmUsIHdlIHNlZSBvYmplY3RzIGluIHRoZSB3b3Jrc3BhY2UuClVubGlrZSAqbHMqLCBtb3N0IGZ1bmN0aW9ucyByZXF1aXJlIG9uZSBvciBtb3JlIGFyZ3VtZW50cy4gQmVsb3cgaXMgYW4gZXhhbXBsZSBvZiBob3cgd2UgYXNzaWduIGFuIG9iamVjdCB0byB0aGUgYXJndW1lbnQgb2YgdGhlIGZ1bmN0aW9uICpsb2cqLiBSZW1lbWJlciB0aGF0IHdlIGVhcmxpZXIgZGVmaW5lZCAqYSogdG8gYmUgMToKCmxvZyg4KQpsb2coYSkKCnlvdSBjYW4gZmluZCBvdXQgd2hhdCB0aGUgZnVuY3Rpb24gZXhwZWN0cyBhbmQgd2hhdCBpdCBkb2VzIGJ5IHJldmlld2luZyB0aGUgdmVyeSB1c2VmdWwgbWFudWFscyBpbmNsdWRlZCBpbiBSLiB5b3UgY2FuIGdldCBoZWxwIGJ5IHVzaW5nIHRoZSAqaGVscCogZnVuY3Rpb24gbGlrZSB0aGlzOgoKaGVscCgibG9nIikKCmZvciBtb3N0IGZ1bmN0aW9ucywgd2UgY2FuIGFsc28gdXNlIHRoaXMgc2hvcnRoYW5kOgoKP2xvZwoKeW91IGNhbiBkZXRlcm1pbmUgd2hpY2ggYXJndW1lbnRzIGFyZSBvcHRpb25hbCBieSBub3RpbmcgaW4gdGhlIGhlbHAgZG9jdW1lbnQgdGhhdCBhIGRlZmF1bHQgdmFsdWUgaXMgYXNzaWduZWQgd2l0aCAqPSouIERlZmluaW5nIHRoZXNlIGlzIG9wdGlvbmFsLiBGb3IgZXhhbXBsZSwgdGhlIGJhc2Ugb2YgdGhlIGZ1bmN0aW9uICpsb2cqIGRlZmF1bHRzIHRvICpiYXNlPWV4cCgxKSogbWFraW5nICpsb2cqIHRoZSBuYXR1cmFsIGxvZyBieSBkZWZhdWx0LgppZiB5b3Ugd2FudCBhIHF1aWNrIGxvb2sgYXQgdGhlIGFyZ3VtZW50cyB3aXRob3V0IG9wZW5pbmcgdGhlIGhlbHAgc3lzdGVtLCB5b3UgY2FuIHR5cGU6CgphcmdzKGxvZykKCnlvdSBjYW4gY2hhbmdlIHRoZSBkZWZhdWx0IHZhbHVlcyBieSBzaW1wbHkgYXNzZ2luaW5nIGFub3RoZXIgb2JqZWN0OiAKCmxvZyg4LCBiYXNlPTIpCgpOb3RlIHRoYXQgd2UgaGF2ZSBub3QgYmVlbiBzcGVjaWZ5aW5nIHRoZSBhcmd1bWVudCAqeCogYXMgc3VjaDoKCmxvZyh4PTgsIGJhc2U9MikKCnRoZSBhYm92ZSBjb2RlIHdvcmtzLCBidXQgd2UgY2FuIHNhdmUgb3Vyc2VsdmVzIHNvbWUgdHlwZWluZzogaWYgbm8gYXJndW1lbnQgbmFtZSBpcyB1c2VkLCBSIGFzc3VtZXMgeW91IGFyZSBlbnRlcmluZyBhcmd1bWVudHMgaW4gdGhlIG9yZGVyIHNob3duIGluIHRoZSBoZWxwIGZpbGUgb3IgYnkgKmFyZ3MqLiBzbyBieSBub3QgdXNpbmcgdGhlIG5hbWVzLCBpdCBhc3N1bWVzIHRoZSBhcmd1bWVudHMgYXJlICp4KiBmb2xsb3dlZCBieSAqYmFzZSo6Cgpsb2coOCwyKQoKaWYgdXNpbmcgdGhlIGFyZ3VtZW50cycgbmFtZXMsIHRoZW4gd2UgY2FuIGluY2x1ZGUgdGhlbSBpbiB3aGF0ZXZlciBvcmRlciB3ZSB3YW50OgoKbG9nKGJhc2U9MiwgeD04KQoKVG8gc3BlY2lmeSBhcmd1bWVudHMsIHdlIG11c3Qgc2VlICo9KiwgYW5kIGNhbm5vdCB1c2UgKjwtKi4KdGhlcmUgYXJlIHNvbWUgZXhjZXB0aW9ucyB0byB0aGUgcnVsZSB0aGF0IGZ1bmN0aW9ucyBuZWVkIHRoZSBwYXJlbnRoZXNpcyB0byBiZSBldmFsdWF0ZWQuIEFtb250IHRoZXNlLCB0aGUgbW9zdCBjb21tb25seSB1c2VkIGFyZSB0aGUgYXJpdGhtZXRpYyBhbmQgcmVsYXRpb25hbCBvcGVyYXRvcnMuIEZvciBleGFtcGxlOiAKCjJeMwoKeW91IGNhbiBzZWUgdGhlIGFyaXRobWV0aWMgb3BlcmF0b3JzIGJ5IHR5cGluZzoKCmhlbHAoIisiKQoKb3IKCj8iKyIKCmFuZCB0aGUgcmVsYXRpb25hbCBvcGVyYXRvcnMgYnkgdHlwaW5nOgoKaGVscCgiPiIpCgpvciAKCj8iPiIKCjIuMi40IG90aGVyIHByZWJ1aWx0IG9iamVjdHMKCnRoZXJlIGFyZSBzZXZlcmFsIGRhdGFzZXRzIHRoYXQgYXJlIGluY2x1ZGVkIGZvciB1c2VycyB0byBwcmFjdGljZSBhbmQgdGVzdCBvdXQgZnVuY3Rpb25zLiB5b3UgY2FuIHNlZSBhbGwgdGhlIHZhcmlhYmxlcyBkYXRhc2V0cyBieSB0eXBpbmc6CgpkYXRhKCkKClRoaXMgc2hvd3MgeW91IHRoZSBvYmplY3QgbmFtZSBmb3IgdGhlc2UgZGF0YXNldHMuIHRoZXNlIGRhdGFzZXRzIGFyZSBvYmplY3RzIHRoYXQgY2FuIGJlIHVzZWQgYnkgc2ltcGx5IHR5cGluZyB0aGUgbmFtZS4gZm9yIGV4YW1wbGUsIGlmIHlvdSB0eXBlOgoKY28yCgpvdGhlciBwcmVidWlsdCBvYmplY3RzIGFyZSBtYXRoZW1hdGljYWwgcXVhbnRpdGllcywgc3VjaCBhcyB0aGUgY29uc3RhbnQgcGkgYW5kIGluZmluaXRlOgoKcGkKSW5mKzEKCjIuMi41IHZhcmlhYmxlIG5hbWVzCgpBIG5pY2UgY29udmVudGlvbiB0byBmb2xsb3cgaXMgdG8gdXNlIG1lYW5pbmdmdWwgd29yZHMgdGhhdCBkZXNjcmliZSB3aGF0IGlzIHN0b3JlZCwgdXNlIG9ubHkgbG93ZXIgY2FzZSwgYW5kIHVzZSB1bmRlcnNjb3JlcyBhcyBhIHN1YnN0aXR1dGUgZm9yIHNwYWNlcy4gZm9yIHRoZSBxdWFkcmF0aWMgZXF1YXRpb25zLCB3ZSBjb3VsZCB1c2Ugc29tZXRoaW5nIGxpa2UgdGhpczoKCnNvbHV0aW9uXzEgPC0gKC1iK3NxcnQoYl4yLTQqYSpjKSkvKDIqYSkKc29sdXRpb25fMiA8LSAoLWItc3FydChiXjItNCphKmMpKS8oMiphKQoKc2F2ZQoKMi4yLjcgbW90aXZhdGluZyBzY3JpcHRzCgpUbyBzb2x2ZSBhbm90aGVyIGVxdWF0aW9uIHN1Y2ggYXMgM3heMisyeC0xLCB3ZSBjYW4gY29weSBhbmQgcGFzdGUgdGhlIGNvZGUgYWJvdmUgYW5kIHRoZW4gcmVkZWZpbmUgdGhlIHZhcmlhYmxlcyBhbmQgcmVjb21wdXRlIHRoZSBzb2x1dGlvbjoKCmE8LSAzCmI8LSAyCmM8LSAtMQoKKC1iK3NxcnQoYl4yLTQqYSpjKSkvKDIqYSkKKC1iLXNxcnQoYl4yLTQqYSpjKSkvKDIqYSkKCjIuMi44IGNvbW1lbnRpbmcgeW91ciBjb2RlCgppZiBhIGxpbmUgb2YgUiBjb2RlIHN0YXJ0cyB3aXRoIHRoZSBzeW1ib2wgKiMqLCBpdCBpcyBub3QgZXZhbHVhdGVkLiB3ZSBjYW4gdXNlIHRoaXMgdG8gd3JpdGUgcmVtaW5kZXJzIG9mIHdoeSB3ZSB3cm90ZSBwYXJ0aWN1bGFyIGNvZGUuIEZvciBleGFtcGxlLCBpbiB0aGUgc2NyaXAgYWJvdmUgd2UgY291bGQgYWRkOgoKIyMgY29kZSB0byBjb21wdXRlIHNvbHV0aW9uIHRvIHF1YWRyYWRpYyBlcXVhdGlvbiBvZiB0aGUgZm9ybSBheF4yK2J4K2MKIyMgZGVmaW5lIHRoZSB2YXJpYWJsZXMKYTwtIDMKYjwtIDIKYzwtIC0xCgojIyBub3cgY29tcHV0ZSB0aGUgc29sdXRpb24KKC1iK3NxcnQoYl4yLTQqYSpjKSkvKDIqYSkKKC1iLXNxcnQoYl4yLTQqYSpjKSkvKDIqYSkKCjIuMyBleGVyY2lzZXMKCjEuIHdoYXQgaXMgdGhlIHN1bSBvZiB0aGUgZmlyc3QgMTAwIHBvc2l0aXZlICBpbnRlZ2Vycz8gdGhlIGZvcm11bGEgZm9yIHRoZSBzdW0gb2YgaW50ZWdlcnMgMSB0aHJvdWdoIG4gaXMgbihuKzEpLzIuIGRlZmluZSBuPTEwMCBhbmQgdGhlbiB1c2UgUiB0byBjb21wdXRlIHRoZSBzdW0gb2YgMSB0aHJvdWdoIDEwMCB1c2luZyB0aGUgZm9ybXVsYS4gd2hhdCBpcyB0aGUgc3VtPwoKbjwtIDEwMApzb2x1dGlvbl8xIDwtIHtuKihuKzEpfS8yCgoyLiBOb3cgdXNlIHRoZSBzYW1lIGZvcm11bGEgdGhlIHN1bSBvZiB0aGUgaW50ZWdlcnMgZnJvbSAhIHRocm91Z2ggMTAwMC4KCm48LSAxMDAwCnNvbHV0aW9uXzEgPC0ge24qKG4rMSl9LzIKCjMuIGxvb2sgYXQgdGhlIHJlc3VsdCBvZiB0eXBpbmcgdGhlIGZvbGxvd2luZyBjb2RlIGludG8gUjoKCm48LSAxMDAwCng8LSBzZXEoMSxuKQpzdW0oeCkKCkJhc2VkIG9uIHRoZSByZXN1bHQsIHdoYXQgZG8geW91IHRoaW5rIHRoZSBmdW5jdGlvbnMgKnNlcSogYW5kICpzdW0qIGRvPyB5b3UgY2FuIHVzZSAqaGVscCoKCmFuc3dlcjogYgoKNC4gSW4gbWF0aCBhbmQgcHJvZ3JhbW1pbmcsIHdlIHNheSB0aGF0IHdlIGV2YWx1YXRlIGEgZnVuY3Rpb24gd2hlbiB3ZSByZXBsYWNlIHRoZSBhcmd1bWVudCB3aXRoIGEgZ2l2ZW4gbnVtYmVyLiBzbyBpZiB3ZSB0eXBlICpzcXJ0KDQpKiwgd2UgZXZhbHVhdGUgdGhlICpzcXJ0KiBmdW5jdGlvbi4gSW4gUiwgeW91IGNhbiBldmFsdWF0ZSBhIGZ1bmN0aW9uIGluc2lkZSBhbm90aGVyIGZ1bmN0aW9uLiBUaGUgZXZhbHVhdGlvbiBoYXBwZW4gZnJvbSB0aGUgaW5zaWRlIG91dC4gdXNlIG9uZSBsaW5lIG9mIGNvZGUgdG8gY29tcHV0ZSB0aGUgbG9nLiBpbiBiYXNlIDEwLCBvZiB0aGUgc3F1YXJlIHJvb3Qgb2YgMTAwLgoKbG9nKHNxcnQoMTAwKSwgYmFzZT0xMCkKCjUuIHdoaWNoIG9mIHRoZSBmb2xsb3dpbmcgd2lsbCBhbHdheXMgcmV0dXJuIHRoZSBudW1lcmljIHZhbHVlIHN0b3JlZCBpbiAqeCo/IHlvdSBjYW4gdHJ5IG91dCBleGFtcGxlcyBhbmQgdXNlIHRoZSBoZWxwIHN5c3RlbSBpZiB5b3Ugd2FudC4KCj8iZXhwIgoKbG9nMTAoeF4xMCkKbG9nKDEwXngpCmxvZyhleHAoeCkpCmV4cChsb2coeCwgYmFzZT0yKSkKCmxvZygxMCkKCmFuc3dlcjogYwoKMi40IERhdGEgdHlwZXMK</div>
 
 
 

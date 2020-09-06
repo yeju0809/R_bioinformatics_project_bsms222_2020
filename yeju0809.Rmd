@@ -78,71 +78,71 @@ For most functions, we can also use this shorthand:
 you can determine which arguments are optional by noting in the help document that a default value is assigned with *=*. Defining these is optional. For example, the base of the function *log* defaults to *base=exp(1)* making *log* the natural log by default.
 if you want a quick look at the arguments without opening the help system, you can type:
 
-```
+```{r}
 args(log)
 ```
 
 you can change the default values by simply assgining another object: 
-```
+```{r}
 log(8, base=2)
 ```
 
 Note that we have not been specifying the argument *x* as such:
 
-```
+```{r}
 log(x=8, base=2)
 ```
 
 the above code works, but we can save ourselves some typeing: if no argument name is used, R assumes you are entering arguments in the order shown in the help file or by *args*. so by not using the names, it assumes the arguments are *x* followed by *base*:
-```
+```{r}
 log(8,2)
 ```
 
 if using the arguments' names, then we can include them in whatever order we want:
-```
+```{r}
 log(base=2, x=8)
 ```
 
 To specify arguments, we must see *=*, and cannot use *<-*.
 there are some exceptions to the rule that functions need the parenthesis to be evaluated. Amont these, the most commonly used are the arithmetic and relational operators. For example: 
-```
+```{r}
 2^3
 ```
 
 you can see the arithmetic operators by typing:
-```
+```{r}
 help("+")
 ```
 
 or
-```
+```{R}
 ?"+"
 ```
 
 and the relational operators by typing:
-```
+```{r}
 help(">")
 ```
 
 or 
-```
+```{r}
 ?">"
 ```
 
 # 2.2.4 other prebuilt objects
 
 there are several datasets that are included for users to practice and test out functions. you can see all the variables datasets by typing:
-```
+```{r}
 data()
 ```
 
 This shows you the object name for these datasets. these datasets are objects that can be used by simply typing the name. for example, if you type:
-```
+```{R}
 co2
 ```
 
 other prebuilt objects are mathematical quantities, such as the constant pi and infinite:
-```
+```{r}
 pi
 Inf+1
 ```
@@ -150,7 +150,7 @@ Inf+1
 # 2.2.5 variable names
 
 A nice convention to follow is to use meaningful words that describe what is stored, use only lower case, and use underscores as a substitute for spaces. for the quadratic equations, we could use something like this:
-```
+```{r}
 solution_1 <- (-b+sqrt(b^2-4*a*c))/(2*a)
 solution_2 <- (-b-sqrt(b^2-4*a*c))/(2*a)
 ```
@@ -158,7 +158,7 @@ solution_2 <- (-b-sqrt(b^2-4*a*c))/(2*a)
 # 2.2.7 motivating scripts
 
 To solve another equation such as 3x^2+2x-1, we can copy and paste the code above and then redefine the variables and recompute the solution:
-```
+```{r}
 a<- 3
 b<- 2
 c<- -1
@@ -171,7 +171,7 @@ c<- -1
 
 If a line of R code starts with the symbol *#*, it is not evaluated. we can use this to write reminders of why we wrote particular code. For example, in the scrip above we could add:
 
-```
+```{r}
 ## code to compute solution to quadradic equation of the form ax^2+bx+c
 ## define the variables
 a<- 3
@@ -186,7 +186,7 @@ c<- -1
 # 2.3 exercises
 
 1. what is the sum of the first 100 positive  integers? the formula for the sum of integers 1 through n is n(n+1)/2. define n=100 and then use R to compute the sum of 1 through 100 using the formula. what is the sum?
-```
+```{R}
 n<- 100
 solution_1 <- {n*(n+1)}/2
 ```
@@ -194,14 +194,14 @@ answer: 5050
 
 2. Now use the same formula the sum of the integers from ! through 1000.
 
-```
+```{r}
 n<- 1000
 solution_1 <- {n*(n+1)}/2
 ```
 answer: 500500
 
 3. look at the result of typing the following code into R:
-```
+```{r}
 n<- 1000
 x<- seq(1,n)
 sum(x)
@@ -212,14 +212,14 @@ Based on the result, what do you think the functions *seq* and *sum* do? you can
 answer: b
 
 4. In math and programming, we say that we evaluate a function when we replace the argument with a given number. so if we type *sqrt(4)*, we evaluate the *sqrt* function. In R, you can evaluate a function inside another function. The evaluation happen from the inside out. use one line of code to compute the log. in base 10, of the square root of 100.
-```
+```{R}
 log(sqrt(100), base=10)
 ```
 answer: 1
 
 5. which of the following will always return the numeric value stored in *x*? you can try out examples and use the help system if you want.
 
-```
+```{r}
 ?"exp"
 
 log10(x^10)
@@ -234,7 +234,7 @@ answer: c
 
 The function *class* helps us determine what type of object we have:
 
-```
+```{R}
 a<- 2
 class(a)
 ```
@@ -242,13 +242,13 @@ class(a)
 # 2.4.1 data frames
 
 A large proportion of data analysis challenges start with data stored in a data frame. For example, we stored the data for our motivating example in a data frame. you can access this dataset by loading the dslabs library and loading the *murders* dataset using the *data* function:
-```
+```{r}
 library(dslabs)
 data(murders)
 ```
 
 to see that this is in fact a data frmae, we type:
-```
+```{r}
 class(murders)
 ```
 
@@ -256,12 +256,12 @@ class(murders)
 
 the function *str* is useful for finding out more abour the structure of an object:
 
-```
+```{r}
 str(murders)
 ```
 
 this tells us much more about the object. We see that the table has 51 rows(50 states plus DC) and five variables. we can show the first six lines using the function *head*:
-```
+```{r}
 head(murders)
 ```
 
@@ -269,13 +269,13 @@ head(murders)
 
 For our analysis, we will need to access the different variables represented by columns included in this data frame. To do this, we use the accessor operator *$* in the following way:
 
-```
+```{r}
 murders$population
 ```
 
 But how did we know to use *population*? previously, by applying the function *str* to the object *murders*, we revealed the names for each of the five variables stored in this table, we can quickly access the variable manes using:
 
-```
+```{r}
 names(murders)
 murders$p   
 ```
@@ -284,25 +284,25 @@ murders$p
 
 the object *murders$population* is not one numver but several. we call these types of objects vectors. A single nuber is technically a vector of length 1, but in general we use the term you how many entries are in the vector:
 
-```
+```{r}
 pop<- murders$population
 length(pop)
 ```
 
 this particular vector is numeric since population sizes are numbers:
-```
+```{r}
 class(pop)
 ```
 
 In a numeric vector, every entry must be a number.
 To store character strings, vectors can also be of class character. for example, the state names are character:
-```
+```{r}
 class(murders$state)
 ```
 
 as with numeric vectors, all entries in a character vector need to be a character.
 another important type of vectors are logical vectors. these must be either *true* or *false*.
-```
+```{r}
 z<- 3==2
 z
 
@@ -312,7 +312,7 @@ class(z)
 Here the *==* is a relational operator asking if 3 is equal to 2. In R, if you just use one *=*, you actually assign a variable, but if you use two *==* you test for equality.
 
 you can see the other relational operators by typing:
-```
+```{r}
 ?Comparison
 
 class(1)
@@ -323,17 +323,17 @@ class(1L)
 # 2.4.5 factors
 
 In the *murders* dataset, we might expect the region to also be a charactoer vector. However, it is not:
-```
+```{r}
 class(murders$region)
 ```
 
 it is a factor. factors are useful for storing categorical data. we can see that there are only 4 regions bu using the *levels* function:
-```
+```{r}
 levels(murders$region)
 ```
 
 suppose we want the levels of the region by the total numver of murders rather than alphabetical order. if there are values associated with each level, we can use the *reorder* and specify a data summary to determine the order. the following code takes the sum of the total murders in each region, and reorders the factor following these sums.
-```
+```{r}
 region<- murders$region
 value<- murders$total
 region<- reorder(region, value, FUN= sum)
@@ -344,7 +344,7 @@ levels(region)
 
 data frames are a special case of lists. we will cover lists in more detail later, but know that they are useful because you can store any combination of different types:
 
-```
+```{r}
 record<- list()
 
 record[['name']]<- 'John Doe'
@@ -359,16 +359,16 @@ class(record)
 
 As with data frames, you can extract the components of a list with the acessor *$*. In fact, data frames are a type of list.
 
-```
+```{r}
 record$student_id
 ```
 
 we can also use double square brackets (*[[*) like this:
-```
+```{r}
 record[["student_id"]]
 ```
 
-```
+```{r}
 record2<- list()
 record2[[1]]<- 'John Doe'
 record2[[2]]<- 1234
@@ -380,7 +380,7 @@ record2
 ```
 
 If a list does not names, you cannot extract the elements with *$*, but you can still use the brackets method and instead of providing the variable name, you provide the list index, like this:
-```
+```{r}
 record2[[1]]
 ```
 
@@ -388,44 +388,44 @@ record2[[1]]
 
 matrics have a major advantage over data frames: we can perform matirx algebra operations, a powerful type of mathematical technique. We do not describe these operations in this book, but much of what happens in the background when you perform a data analysis involves matrices.
 We can difine a matirx usin the *matrix* function. We need to specify the number of rows and columns.
-```
+```{r}
 mat<- matrix(1:12, 4, 3)
 mat
 ```
 
 you can access specific entries in a matirx using square brackets (*[*). If you want the secon row, third column, you use:
-```
+```{r}
 mat[2,3]
 ```
 
 if you want the entire second row, you leave the column spot empty:
-```
+```{r}
 mat[2,]
 ```
 
 similarly, if you want the entire third column, you leave the row spot empty:
-```
+```{r}
 mat[,3]
 ```
 
 this is also a vector, not a matirx.
 you can access more than one column or more than one row if you like. this will give you a new matix.
-```
+```{r}
 mat[,2:3]
 ```
 
 you can subset both rows and columes:
-```
+```{r}
 mat[1:2, 2:3]
 ```
 
 we can convert matrices into data frames using the function *as.data.frame*:
-```
+```{r}
 as.data.frame(mat)
 ```
 
 you can also use single square brackets (*[*) to access rows and columns of a data frame:
-```
+```{r}
 data("murders")
 murders[25,1]
 
@@ -436,18 +436,19 @@ murders[2:3,]
 
 1. load the US murders dataset.
 use the function *str* to examine the structure of the *murders* object. which of the following best describes the variables represented in this data frame?
-```
+```{r}
 str(murders)
 ```
 
 answer. c
 
 2. What are the column names by the data frame for these five variables?
-
-answer: state, abb, region, population, total
+```
+state, abb, region, population, total
+```
 
 3. use the accessor *$* to extract the state abbreviations and assign them to the object *a*. what is the class of this object?
-```
+```{r}
 mur<- murders$abb
 a<- mur
 class(a)
@@ -456,7 +457,7 @@ class(a)
 answer: character
 
 4. now use the square brackets to extract the state abbreviations and assign them to the object *b*. use the *identical* function to determine if *a* and *b* are the same.
-```
+```{r}
 b<- murders[["abb"]]
 z<- a==b
 z
@@ -467,7 +468,7 @@ answer: they are same
 5. We saw that the *region* column stores a factor. you can corroborate this by typing:
 *class(murders$region)*
 with one line of code, use the function *levels* and *length* to determine the number of regions defined by this dataset.
-```
+```{r}
 class(murders$region)
 
 length(levels(murders$regions))
@@ -479,30 +480,30 @@ answer: 0
 
 str(murders)
 
-```
+```{r}
 table(murders$state, murders$region)
 ```
 # 2.6.1 creating vectors
 
 we can create vectors using the function *c*, which stands for concatenate. we use *c* to concatenate entries in the following way:
 
-```
+```{r}
 codes <- c(380, 124,818)
 codes
 ```
 
 we can also create character vectors. we use the quotes to denote that the entries are characters rather than variable names.
-```
+```{r}
 country<- c("italy","canada","egypt")
 ```
 in R, you can also use single quotes:
-```
+```{r}
 country<- c('italy','canada','egypt')
 ```
 but be careful not to confuse the single quote 'with the back quote`.
 
 by now you should know that if you type:
-```
+```{r}
 country<- c(italy, canada, egypt)
 ```
 you recieve an error because the variables *italy*, *canada* and *egypt* are not defined. if we do not use the quotes, R looks for variables with those names and returns an error.
@@ -511,22 +512,22 @@ you recieve an error because the variables *italy*, *canada* and *egypt* are not
 
 sometimes it is useful to name the entries of a vector. For example, when defining a vector of country codes, we can use the names to connet the two:
 
-```
+```{r}
 codes<- c(italy=380, canada=124, egypt=818)
 codes
 ```
 the object *codes* continues to be a numeric vector:
-```
+```{r}
 class(codes)
 ```
 
 but with names:
-```
+```{R}
 names(codes)
 ```
 
 if the use of strings without quotes looks confusing, know that you can use the quotes as well:
-```
+```{r}
 codes<- c("italy"=380, "canada"=124, "egypt"=818)
 codes
 ```
@@ -535,7 +536,7 @@ There is no difference between this function call and the previous one. This is 
 
 we can also assign names using the *names* functions:
 
-```
+```{r}
 codes<- c(380,124,818)
 country<- c("italy","canada","egypt")
 names(codes)<- country
@@ -544,49 +545,50 @@ codes
 # 2.6.3 sequences
 
 another useful function for creating vectors generates sequences:
-```
+```{r}
 seq(1,10)
 ```
 
 the first argument defines the start, and the second defines the end which is included. The default is to go up in increments of 1, but a third argument lets us tell it how much to jump by:
-```
+```{r}
 seq(1,10,2)
 ```
 
 if we want consecutive integers, we can use the following shorthand:
-```
+```{r}
 1:10
 ```
 
 when we use these functions, R produces integers, not numerics, because they are typically used to index something:
-```
+```{r}
 class(1:10)
 ```
 
 however, if we create a sequence including non-integers, the class changes:
-```
+```{r}
 class(seq(1,10,0.5))
 ```
 
 # 2.6.4 subsetting
 
 we use square brackets to access specific elements of a vector, for the vector *codes* we defined above, we can access the second element using:
-```
+```{r}
 codes[2]
 ```
 
 you cna get more than one entry by using a multi-entry vector as an index:
-```
+```{r}
 codes[c(1,3)]
 ```
 the sequences defined above are particularly useful if we want to access, say, the first two elements:
-```
+```{r}
 codes[1:2]
 ```
 
 if the elements have names, we cal also access the entries using these names.
-```
+```{r}
 codes["canada"]
 codes[c("egypt","italy")]
 ```
-
+ 
+  

@@ -502,7 +502,7 @@ boxplot(rate~region, data=murders)
 we can see that the South has higher murder rates than the other three regions.
 
 # 2.15.4 image
-
+  
 the image function displays the values in a matirx using color. here is a quick example:
 ```{r}
 x<- matrix(1:120, 12, 10)

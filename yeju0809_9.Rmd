@@ -517,7 +517,7 @@ population_in_millions<- murders$population/10^6
 total_gun_murders<- murders$total
 plot(population_in_millions, total_gun_murders)
 ```
-
+  
 keep in mind that many states have populations below 5 million and are bunched up. we may gain further insights from making this plot in the log scale. transform the variables using the *log10* transformation and then plot them.
 ```{r}
 population_in_millions<- log(murders$population/10^6, base=10)

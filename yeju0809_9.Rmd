@@ -238,13 +238,14 @@ sort(pop)[1]
 ```{r}
 order(pop)
 ```
-answer: 51
 
 3. we can actually perform the same operation as in the previous exercise using the function *which.min*. write one line of code that does this.
 
 ```{r}
 which.min(murders$population)
 ```
+answer: 51
+
 4. now we know how small the state is and we know which row represents it. which state is it? define a variable *states* to be the state names from the *murders* data frame. report the name of the state with the smallest population.
 
 ```{r}
@@ -259,8 +260,8 @@ my_df
 ```
 6. repeat the previous exercise, but this time order *my_df* so that the states are ordered from least populous to most populous. then use the bracket operator *[* to re-order each column in the data frame.
 ```{r}
-ind<- order(my_df)
-
+ind<- order(murders$population)
+x[ind]
 ```
 7. the *na_example* vector represents a series of counts. you can quickly examine the object using:
 ```{r}

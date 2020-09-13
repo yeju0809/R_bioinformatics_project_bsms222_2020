@@ -256,7 +256,7 @@ r<- x^2
 sum(r)}
 compute_s_n(10)
 ```
-8. define an empty numerical vector *s_n* of size 25 using *s_n <- vector("numeric", 25)* and store in the results of S1, S2, ...,S25 using a for-loop.
+8. define an empty numerical vector *s_n* of size 25 using *s_n <- vector("numeric", 25)* and store in the results of S1, S2, ...,S25 using a for-loop. 
 ```{r}
 s_n<- vector("numeric", 25)
 for(n in 1:25){s_n[n]<- compute_s_n(n)}

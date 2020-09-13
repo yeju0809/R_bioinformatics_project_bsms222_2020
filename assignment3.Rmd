@@ -1,0 +1,287 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
+
+Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Ctrl+Shift+Enter*. 
+
+```{r}
+plot(cars)
+```
+
+Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Ctrl+Alt+I*.
+
+When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Ctrl+Shift+K* to preview the HTML file).
+
+The preview shows you a rendered HTML copy of the contents of the editor. Consequently, unlike *Knit*, *Preview* does not run any R code chunks. Instead, the output of the chunk when it was last run in the editor is displayed.
+
+## chapter3 Programming basics
+conditional expression, for-loops, functions
+
+# 3.1 conditional expressions
+conditional expressions are one of the basic features of programming. they are used for what is called flow control. the most common conditional expression is the if-else statement. in R, we can actually perform quite a bit of data analysis without conditionals. However, they do come up occationally, and you will need them once you start writing your own functions and packages. 
+
+Here is a very simple example showing the general structure of an if-else statement. the basic idea is to print the reciprocal of *a* unless *a* is 0:
+
+```{r}
+a<- 0
+
+if(a!=0) {print(1/a)} else{print("no reciprocal for 0.")}
+```
+let's look at one more example using the US murders data frame:
+
+```{r}
+library(dslabs)
+data(murders)
+murder_rate<- murders$total/ murders$population * 100000
+```
+
+here is very simple example that tells us which states, if any, have a murder rate lower than 0.5 per 100,000. the *if* statement protects us from the case in which no state satisfies the condition.
+
+```{r}
+ind<- which.min(murder_rate)
+if(murder_rate[ind]<0.5){print(murders$state[ind])} else{print("no state has murder rate that low")}
+```
+If we try it again with a rate of 0.25, we get a different answer:
+
+```{r}
+if(murder_rate<0.25){print(murders$state[ind])} else{print("no state has a murder rate that low.")}
+```
+
+A related function that is very useful if *ifelse*. this function takes three arguments: a logical and two possible answers. if the logical is *TRUE*, the value in the second argument is returned and if *FALSE*, the value in the third argument is returned. Here is an example:
+
+```{r}
+a<- 0
+ifelse(a>0, 1/a, NA)
+```
+the function is particularly useful because it works on vectors. it examines each entry of the logical vector and returns elements from the vector provided in the second argument, if the entry is *TRUE*, or elements from the vector provided in the third argument, if the entry is *FALSE*.
+
+```{r}
+a<- c(0, 1, 2, -4, 5)
+result<- ifelse(a>0, 1/a, NA)
+result
+```
+here is an example of how this function can be readily used to replace all the missing values in a vector with zeros:
+
+```{r}
+data("na_example")
+no_nas<- ifelse(is.na(na_example), 0, na_example)
+sum(is.na(no_nas))
+```
+
+two other useful functions are *any* and *all*. the *any* function takes a vector of logicals and returns *TRUE* if any of the entries is *TRUE*. the *all* fuction takes a vector of logicals and returns *TRUE* if all of the entries are *TRUE*. here is an example:
+
+```{r}
+z<- c(TRUE, TRUE, FALSE)
+any(z)
+all(z)
+```
+
+# 3.2 defining functions
+
+As you become more experienced, you will find yourself needing to perform the same operations over and over. a simple example is computing averages. we can compute the average of a vector *x* using the *sum* and *length* functions: *sum(x)/length(x)*. because we do this repeatedly, it is much more efficient to write a function that performs this operation. this particular operation is so common that someone already wrote the *mean* function and it is included in base R. However, you will encounter situations in which the function does not already exist, so R permits you to write your own. a simple version of a function that computes the average can be defined like this:
+
+```{r}
+avg<- function(x){s<- sum(x)
+n<- length(x) 
+s/n}
+```
+
+now *avg* is a function that computes the mean:
+```{r}
+x<- 1:100
+identical(mean(x), avg(x))
+```
+notice that variables defined inside a function are not saved in the workspace. so while we use *s* and *n* when we call *avg*, the values are created and changed only during the call. here is an illustrative example:
+
+```{r}
+s<- 3
+avg(1:10)
+s
+```
+
+note how *s* is still 3 after we call *avg*.
+
+in general, functions are objects, so we assign them to variable names with *<-*. the function *function* tells R you are about to define a function. the general form of a function definition looks like this:
+
+```
+my_function<- function(VARIABLE_NAME){
+  perform operations on VARIABLE_NAME and calculate VALUE
+  VALUE}
+```
+the functions you define can have multiple arguments as well as default values. for example, we can define a function that computes either the arithmetic or geometric average depending on a user defined variable like this:
+```{r}
+avg<- function(x, arithmetic= TRUE){n<- length(x)
+ifelse(arithmetic, sum(x)/n, prod(x)^(1/n))}
+```
+we will learn more about how to create functions through experience as we face more complex tasks.
+
+# 3.3 Namespaces
+
+once you start becoming more of an R expert user, you will likely need to load several add-on packages for some of your analysis. once you start doing this, it is likely that two packages use the same name for two different functions. and often these functions do completely different things. in fact, you have already encountered this because both dplyr and the R-base stats package define a *filter* function. there ae five other examples in dplyr. we know this because when we first load dplyr we see the following message:
+```
+install.packages('dplyr')
+```
+
+so what does R do when we type *filter*? does it use the dplyr function or the stats function? from our previous work we know it uses the dplyr one. but what if we want to use the stats version?
+
+these functions live in different namespaces. R will follow a certain order when searching for a function in these namespaces. you can see the order by typing:
+```{r}
+search()
+```
+
+the first entry in this list is the global environment which includes all the objects you define.
+
+so what if we want to use the stats *filter* instead of the dplyr filter but dplyr appears first in the search list? you can force the use of a specific namespace by using double colons(*::*) like this:
+```{r}
+stats::filter
+```
+if we want to be absolutely sure that we use the dplyr *filter*, we can use:
+```{r}
+dplyr::filter
+```
+also note that if we want to use a function in a package without loading the entire package, we can use the double colon as well.
+for more on this more advanced topic we reccomend the R packages book.
+
+# 3.4 For-loops
+
+the formula for the sum of the series 1+2+...+n is n(n+1)/2. what if we were't sure that was the right function? how could we check? using what we learned about functions we can create one that computes the Sn:
+```{r}
+compute_s_n <- function(n){x<- 1:n
+sum(x)}
+```
+how can we compute Sn for various of n, say n=1,...,25? do we write 25 lines of code calling *compute_s_n*? no, that is what for-loops are for in programming. in this case, we are performing exactly the same task over and over, and the only thing that is changing is the value of n. for-loops let us define the range that our variable takes (in our example n=1,...,10), then change the value and evalute expression as you loop.
+
+perhaps the simplest example of a for-loops is this useless piece of code:
+```{r}
+for(i in 1:5){print(i)}
+```
+here is the for-loop we would write for our Sn example:
+```{r}
+m<- 25
+s_n<- vector(length = m)
+for(n in 1:m){s_n[n]<- compute_s_n(n)}
+```
+
+in each iteration n=1, n=2, etc, we compute Sn and store it in the nth entry of *s_n*.
+
+now we can create a plot to search for a pattern:
+```{r}
+n<- 1:m
+plot(n, s_n)
+```
+if you noticed that it appears to be a quadratic, you are on the right track because the formula is n(n+1)/2
+
+# 3.5 vectorization and functionals
+
+although for-loops are an important concept to understand, in R we rarely use them. as you learn more R, you will realize that vectorization is preferred over for-loops since it results in shorter and clearer code. we already saw examples in the vector arithmetic section. a vectorized function is a function that will apply the same operation on each of the vectors.
+
+```{r}
+x<- 1:10
+sqrt(x)
+
+y<- 1:10
+x*y
+```
+to make this calculation, there is no need for for-loops. however, not all functions work this way. for example, the function we just wrote, *compute_s_n*, does not work element-wise since it is expecting a scalar. this piece of code does not run the function on each entry of *n*:
+```
+n<- 1:25
+compute_s_n(n)
+```
+
+functionals are functions that helps us apply the same function to each entry in a vector, metirx, data frame, or list. here we cover the functional that operates on numeric, logical, and character vectors: *sapply*.
+the function *sapply* permits us to perform element-wise operations on any funcion. here is how it works:
+```{r}
+x<- 1:10
+sapply(x, sqrt)
+```
+each element of *x* is passed on to the function *sqrt* and the result is returned. these results are concatenated. in this case, the result is a vector of the same length as the original *x*. this implies that the for-loop above can be written as follows:
+```{r}
+x<- 1:25
+sapply(x, compute_s_n)
+```
+
+# 3.6 exercises
+1. what will this conditional expression return?
+```{r}
+x<- c(1,2,-3,4)
+if(all(x>0)){print("all positives")} else{print("not all positives")}
+```
+2. which of the following expressions is always *FALSE* when at least one entry of a logical vector *X* is true?
+```
+answer: d
+```
+
+3. the function *nchar* tells you how many characters long a character vector is. write a line of code that assigns to the object *new_names* the state abbreviation when the state name is longer than 8 characters.
+
+```{r}
+murders$abb[which(nchar(murders$state)>8)]
+```
+
+4. create a function *sum_n* that for any given value, say n, computes the sum of the integers from 1 to n(inclusive). use the function to determine the sum of integers from 1 to 5,000.
+```{r}
+sum_n <- function(n){x<- 1:n
+sum(x)} 
+sum_n(5000)
+```
+5. create a function *altman_plot* that takes two arguments, *x* and *y*, and plots the difference against the sum.
+```{r}
+altman_plot<- function(n,m){
+  x<- 1:n
+  y<- 1:m
+  s<- x+y
+  d<- if(x>=y){print(x-y)} else{print(y-x)}
+  plot(s,d)
+}
+altman_plot(5,7)
+```
+
+6. after running the code below, what is the value of *x*?
+```{r}
+x<- 3
+my_func<- function(y){x<- 5
+y+5}
+my_func(1)
+```
+```
+answer: 1
+```
+
+7. write a function *compute_s_n* that for any given n computes the sum Sn=1^2+2^2+...+n^2. report the value of the sum when n=10.
+```{r}
+compute_s_n <- function(n){x<- 1:n
+r<- x^2
+sum(r)}
+compute_s_n(10)
+```
+8. define an empty numerical vector *s_n* of size 25 using *s_n <- vector("numeric", 25)* and store in the results of S1, S2, ...,S25 using a for-loop.
+```{r}
+s_n<- vector("numeric", 25)
+for(n in 1:25){s_n[n]<- compute_s_n(n)}
+s_n
+```
+9. repeat exercise 8, but this time use *sapply*.
+```{r}
+x<- 1:25
+sapply(x, compute_s_n)
+```
+10. repeat exercise 8, but this time use *map_dbl*.
+```
+install.packages('tidyverse')
+there is no function.
+```
+
+11. plot Sn versus n. use points defined by n=1,...,25.
+```{r}
+n<- 1:25
+plot(n, s_n)
+```
+12. confirm that the formula for this sum is Sn=n(n+1)(2n+1)/6
+```{r}
+x<- 1:25
+sn<- x*(x+1)*(2*x+1)/6
+identical(sn, s_n)
+```
+

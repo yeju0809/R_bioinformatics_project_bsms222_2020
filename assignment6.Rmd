@@ -145,7 +145,7 @@ path<- system.file("extdata", package = "dslabs")
 files<- list.files(path)
 files
 ```
-```{r}
+```
 dat<- read_csv("2010_bigfive_regents.xls" )
 dat<- read_csv("carbon_emissions.csv")
 dat<- read_csv("fertility-two-countries-example.csv")

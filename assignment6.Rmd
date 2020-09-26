@@ -1,0 +1,235 @@
+---
+title: "R Notebook"
+output:
+  html_notebook: default
+  pdf_document: default
+---
+
+This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
+
+Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Ctrl+Shift+Enter*. 
+
+```{r}
+plot(cars)
+```
+
+Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Ctrl+Alt+I*.
+
+When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Ctrl+Shift+K* to preview the HTML file).
+
+The preview shows you a rendered HTML copy of the contents of the editor. Consequently, unlike *Knit*, *Preview* does not run any R code chunks. Instead, the output of the chunk when it was last run in the editor is displayed.
+
+# chapter5 importing data
+we start this chapter by describing the difference between text, unicode, and binary files and how this affects how we import them. we then explain the concepts of file paths and working directories, which are essential to understand how to import data effectively. we then introduce the readr and readxl package and the functions that are available to import spreadsheets into R. finally, we provide some recommendations on how to store and organize data in files. more complex challenges such as extracting data from web pages or PDF documents are left for the Data Wrangling part of the book.
+
+# 5.1 paths and the working directory
+
+the first step when importing data from a spreadsheet is to locate the file containing the data. Although we do not recommend it, you can use an approach similar to what you do to open files in Microsoft Excel by clicking on the Rstudion "file" menu, clicking "import dataset", then clicking through folders until you find the file. we want to be able to write code rather than use the point-and-click approach. the keys and concepts we need to learn to do this are described in detail in the Productivity Tools part of this book. here we provide an overview of the very basics. 
+the main challenge in this first step is that we need to let the R functions doing the importing know where to look for the file containing the data. the simplest way to do this is to have a copy of the file in the folder in which the importing functions look by default. Once we do this, all we have to supply to the importing function is the filename.
+a spreadsheep containg the US murdrs data is included as part of the dslabs package. finding this file is not straightforward, but the following lines of code copy the file to the folder in which R looks in by default. we explain how these lines work below.
+```{r}
+filename<- "murders.csv"
+dir<- system.file("exdata", package = "dslabs")
+fullpath<- file.path(dir, filename)
+file.copy(fullpath, "murders.csv")
+```
+this code does not read the data into R, it just copies a file. but once the file is copied, we can import the data with a simple line of code. here we use the *read_csv* function from the readr package, which is part of the tidyverse.
+```{r}
+library(tidyverse)
+dat<- read_csv(filename)
+```
+the data is imported and stored in dat. the rest of this section defines some important concepts and provides an overview of how we write code that tells R how to find the files we want to import. chapter 38 provides more details on this topic.
+
+# 5.1.1. the filesystem
+you can think of your computer's filesystem as a series of nested folders, each containing other folders and files. data scientists refer to folders as directories. we refer to the folder that contains all other folders as the root directory. we refer to the directory in which we are currently located as the working directory. the working directory therefore changes as you move through folders: think of it as your current location.
+
+# 5.1.2 relative and full paths
+the path of a file is a list of directory names that can be thought of as instructions on what folders to click on, and in what order, to find the file. if these instructions are for finding the file from the root directory we refer to it as the full path. if the instructions are for finding the file starting in the working directory we refer to it as a relative path. section38.3 provides more details on this topic.
+to see an example of a full path on your system type the following:
+```{r}
+system.file(package = "dslabs")
+```
+
+the strings separated by slashes are the directory names. the first slash represents the root directory and we know this s a full path because it starts with a slash. if the first directory name appears without a slash in front, then the path is assumed to be relative. we can use the function *list.files* to see examples of relative paths.
+```{r}
+dir<- system.file(package = "dslabs")
+list.files(path= dir)
+```
+
+these relative paths give us the location of the files or directories if we start in the directory with the full path. 
+
+note: you will probably not make much use of the *system.file* function in your day-to-day analysis work. we introduce it in this section because it facilitates the sharing of spreadsheets by including them in the dslabs package. you will rarely the sharing of spreadsheets by including them in the dslabs package. you will rarely have the luxury of data being included in packages you already have installed. however, you will frequently need to navigate full and relative paths and import spreadsheet formatted data.
+
+# 5.1.3 the working directory
+we highly recommend only writing relative paths in your code. the reason is that full paths are unique to your computer and want your code to be portable. you can get the full path of your working directory without writing out explicitly by using the *getwd* function.
+```{r}
+wd<- getwd()
+```
+if you need to change your working directory, you can use the function *setwd* or you can change it through Rstudio by clicking on "Session".
+
+# 5.1.4 generating path names
+another example of obtaining a full path without writing out explicitly was given above when we created the object *fullpath* like this:
+```{r}
+filename<- "murders.csv"
+dir<- system.file("exdata", package = "dslabs")
+fullpath<- file.path(dir, filename)
+```
+
+the function *system.file* provides the full path of the folder containing all the files and directories relevant to the package specified byy the *package* argument. by exploring the directories in *dir* we find that the *extdata* contains the file we want:
+```{r}
+dir<- system.file(package = "dslabs")
+filename%in% list.files(file.path(dir, "extdata"))
+```
+the *system.file* function permits us to privde a subdirectory as a first argument,so we can obtain the fullpath of the *extdata* directory like this:
+```{r}
+dir<- system.file("extdata", package = "dslabs")
+```
+the function *file.path* is used to combine directory names to produce the full path of the file we want to import.
+```{r}
+fullpath<- file.path(dir, filename)
+```
+
+# 5.1.5 copying files using paths
+the final line of code we used to copy the file into our gome directory used the function *file.copy*. this function takes two arguments: the file to copy and the name to give it in the new directory.
+```{r}
+file.copy(fullpath, "murders.csv")
+```
+if a file is copied successfully, the *file.copy* function returns *TRUE*. note that we are giving the file the same name, *murders.csv*, but we could have named it anything. also note that by not starting the string with a slash, R assumes this is a relative path and copies the file to the working directory.
+you should be able to see the file in your working directory and can check by using:
+```{r}
+list.files()
+```
+# 5.2 the readr and readxl packages
+in this section we introduce the main tidyverse data importing functions. we will use the *murders. csv* file privoded by the dslabs package as an example. to simplify the illustration we will copy the file to our working directory using the following code:
+```
+filename<- "murders.csv"
+dir<- system.file("extdata", package = "dslabs")
+fullpath<- file.path(dir, filename)
+file.copy(fullpath, "murders.csv")
+```
+# 5.2.1 readr
+the readr library includes functions for reading data stored in text file spreadsheets into R. readr is part of the tidyverse package, or you can load it directly:
+```{r}
+library(readr)
+```
+
+although the suffix usually tells us what type of file it is, there is no guarantee that these always match. we can open the file to take a look or use the function *read_lines* to look a few lines:
+```{r}
+read_lines("murders.csv", n_max = 3)
+```
+this also shows that there is a header. now we are ready to read-in the data into R. from the .csv suffix and the peek at the file, we know to use *read_csv*:
+```{r}
+dat<- read_csv(filename)
+```
+note that we recieve a message letting us know what data types were used for each column. also note that *dat* is a *tibble*, not just a data frame. this is because *read_csv* is a tidyverse parser. we can confirm that the data has in fact been read-in with:
+```{r}
+View(dat)
+```
+finally, note that we can also use the full path for the file:
+```{r}
+dat<- read_csv(fullpath)
+```
+
+# 5.2.2 readxl
+
+you can load the readxl package using
+```{r}
+library(readxl)
+```
+the microsoft excel formats permit you to have more than one spreadsheet in one file. these are referred to as sheets. the functions listed above read the first sheet by default, but we can also read the other. the *excel_sheets* function gives us the names of all the sheets in an Excel file. these names can then be passed to the *sheet* argument in the three functions above to read sheets other that the first.
+
+# 5.3 exercises
+1. use the *read_csv* function to read each of the files that the following code saves in the *files* object:
+```{r}
+path<- system.file("extdata", package = "dslabs")
+files<- list.files(path)
+files
+```
+```{r}
+dat<- read_csv("2010_bigfive_regents.xls" )
+dat<- read_csv("carbon_emissions.csv")
+dat<- read_csv("fertility-two-countries-example.csv")
+dat<- read_csv("HRlist2.txt")
+dat<- read_csv("life-expectancy-and-fertility-two-countries-example.csv")
+dat<- read_csv("murders.csv")
+dat<- read_csv("olive.csv")
+dat<- read_csv("RD-Mortality-Report_2015-18-180531.pdf")
+dat<- read_csv("ssa-death-probability.csv")
+```
+2. note that the last one, the *olive* file, gives us a warning. this is because the first line of the file is missing the header for the first column.
+read the help file for *read_csv* to figure out how to read in the file without reading this header. if you skip the header, you should not get this warning. save the result to an object called *dat*.
+```{r}
+dat<- read_csv("olive.csv", skip = 1)
+```
+
+
+3. a problem with the previous approach is that we don't know what the columns represent. type:
+```{r}
+names(dat)
+```
+to see that the names are not informative.
+use the *readLines* function to read in just the first line (we later learn how to extract values from the output).
+```{r}
+read_lines("olive.csv", skip = 1, n_max = 1)
+```
+
+
+# 5.4 downloading files
+another common place for data to reside is on the internet. when these data are in files, we can download them and then import them or even read them directly from the web. for example, we note that because our dslabs package is on github, the file we downloaded with the package has a url:
+```{r}
+url <- "https://raw.githubusercontent.com/rafalab/dslabs/master/inst/extdata/murders.csv"
+```
+the *read_csv* file can read these files directly;
+```{r}
+dat<- read_csv(url)
+```
+if you want to have a local copy of the file, you can use the *download.file* function:
+```{r}
+download.file(url, "murders.csv")
+```
+this will download the file and save it on your system with the name "murders.csv". you can use any name here, not necessarily *murders.csv*. note that when using *download.file* you should be careful as it will overwrite existing files without warning.
+two functions that are sometimes useful when downloading data from the internet are *tempdir* and *tempfile*. the first creates a directory with a random name that is very likely to be unique. similarly, *tempfile* creates a character string, not a file, that is likely to be a unique filename. so you can run a command like this which erases the temporary file once it imports the data:
+```{r}
+tmp_filename<- tempfile()
+download.file(url, tmp_filename)
+dat<- read_csv(tmp_filename)
+file.remove(tmp_filename)
+```
+
+# 5.5 R-base importing functions
+R-base also privides import functions. these have similar names to those in the tidyverse, for example *read.table*, *read.csv* and *read.delim*. however, there are a couple of important differences. to show this we read-in the data with an R-base function:
+```{r}
+dat2<- read.csv(filename)
+```
+an important difference is that the characters are converted to factors:
+```{r}
+class(dat2$abb)
+class(dat2$region)
+```
+
+this can be avoided by setting the argument *stringsAsFactors* to *FALSE*.
+```{r}
+dat<- read.csv("murders.csv", stringsAsFactors = F)
+class(dat$state)
+```
+# 5.5.1 scan
+
+when reading in spreadsheets many things can go wrong. the file might have a multiline header, be missing cells, or it might use an unexpected encoding. 
+with experience you will learn how to deal with different challenges. carefully reading the help files for the functions discussed here will be useful. with scan you can read-in each cell of a file. here is an example:
+```{r}
+path<- system.file("extdata", package = "dslabs")
+filename<- "murders.csv"
+x<- scan(file.path(path, filename), sep = ",", what = "c")
+x[1:10]
+```
+note that the tidyverse provides *read_lines*, a similarly useful function.
+
+# 5.6 text versus binary files
+
+# 5.7 unicode versus ASC2
+
+# 5.8 organizing data with spreadsheets
+the paper for important details: be consistent, choose good names for things, write dates as YYYY-MM-DD, no empty cells, put just one thing in a cell, make it a rectangle, create a data dictionary, no calculations in the raw data files, do not use font color or highlighting as data, make backups, use data validation to avoid errors, save the data as text files.
+
+# 5.9 exercises
+1. pick a measurement you can take on a regular bases. for example. your daily weight or how long it takes you to run 5 miles. keep a spreadsheet that includes the data, the hour, the measurement, and any other informative vairable you think is worth keeping. do this for 2 weeks. then make a plot.

@@ -1,0 +1,155 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
+
+Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Ctrl+Shift+Enter*. 
+
+```{r}
+plot(cars)
+```
+
+Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Ctrl+Alt+I*.
+
+When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Ctrl+Shift+K* to preview the HTML file).
+
+The preview shows you a rendered HTML copy of the contents of the editor. Consequently, unlike *Knit*, *Preview* does not run any R code chunks. Instead, the output of the chunk when it was last run in the editor is displayed.
+
+
+# chapter 7 ggplot2
+
+```
+library(dplyr)
+library(ggplot2)
+```
+
+# 7.1 the components of a graph
+
+we will construct a graph that summarizes the US murders dataset that looks like this:
+
+we can clearly see how much states vary across population size and the total number of murders. not surprisingly, we also see a clear relationship between murder totals and population size. a state falling on the dashed gray line has the same murders rate as the US average. the four geographic regions are denoted with color, which depicts how most southern states have murder rates above the average. 
+this data visualization shows us prettymuch all the information in the data table. the code needed to make this plot is relatively simple. we will learn to create the plot part by part.
+the first step in learning ggplot2 is to be able to break a graph apart into components. let's break down the plot above and intoduce some of the ggplot2 terminolygy. the main three components to note are:
+1. data: the US murders data table is being summarized. we refer to this as the data component.
+2. geometry: the plot above a scatterplot. this is reffered as the geometry component. other possible geometries are barplot, histogram, smooth densities, qqplot, and boxplot. we will learn about these in the Data Visualization part of the book.
+3. aesthetic mapping: the plot uses several visual cues to represent the information provided by the dataset. the two most important cues in this plot are the point positions on the x-axis and y-axis, which represent population size and the total number of murders, respectively. each point represents a different observation, and we map data about rhese observations to visual cues like x- and y-scale. color is another visual cue that we map to region. we refer to this as the aesthetic mapping component. how we define the mapping depends on what geometry we are using.
+
+we also note that:
+- the points are labeled with the state abbreviations.
+- the range of the x-axis appears to be difined by the range of the data. they are both on log-scale. 
+- there are labels, a title, a legend, and we use the style of the economist magazine.
+
+we will now construct the plot piece by piece. 
+we start by loading the dataset:
+```{r}
+library(dslabs)
+data(murders)
+```
+
+# 7.2 *ggplot* objects
+
+the first step in creating a ggplot2 graph is to define a ggplot object. we do this with the funciton ggplot, which initializes the graph. if we read the help file for this function, we see that the first argument is used to specify what data is associated with this object:
+
+```{r}
+ggplot(data = murders)
+```
+we can also pipe the data in as the first argument. so this line of code is equivalent to the one above:
+```{r}
+murders %>% ggplot()
+```
+it renders a plot, in this case a blank slate since no geometry has been defined. the only style choice we see is a grey background. what has happened above is the object was created and, because it was not assingned, it was automatically evaluated. but we can assign our plot to an object, for example like this:
+```{r}
+p<- ggplot(data = murders)
+class(p)
+```
+to render the plot associated with this object, we simply print the object *p*. the following two lines of code each produce the same plot we see above:
+```{r}
+print(p)
+```
+# 7.3 geometires
+in *ggplot2* we create graphs by adding layers. layers can define geometies, compute summary statistics, define what scales to use, or even change styles. to add layers, we use the symbol *+*. in general, a line of code will look like this:
+*DATA %>% ggplot()+LAYER1+LAYER2+*
+usually, the first added layer defines the geometry. we want to make a scatterplot what geometry do we use?
+taking a quick look at the cheat sheet, we see that the function sued to creat plots with this geometry is *geon_point*.
+geometry function names follow the pattern: *geom_X* where X is the name of the geometry. some examples include *geom_point*, *geom_bar*, and *geom_histogram*.
+for *geom_point* to run properly we need to provide data and a mapping. we have already connected the object *p* with the *murders* data table, and if we add the layer *geom_point* it defaults to using this data. to find out what mappings are expected, we read the aesthetics section of the help file, we expected, we see that at least two arguments are required *x* and *y*.
+
+# 7.4 aesthetic mappings
+aesthetic mappings describe how properties of the data connect with features of the graph, such as distance along an axis, size, or color. the *aes* function connects data with what we see on the graph by defining aesthetic mappings and will be one of the functions you use most often when plotting. the outcome of the *aes* function is often used as the argument of a geometry function. this example produces a scatterplot of total murders versus population in millions:
+```{r}
+murders %>% ggplot()+geom_point(aes(x= population/10^6, y= total))
+```
+we can drop the *x=* and *y=*if we wanted to since these are the first and second expected arguments, as seen in the help page. instead of defining our plot from scratch, we can also add a layer to the *p* object that was defined above as *p<-ggplot(data=murders)*:
+```{r}
+p + geom_point(aes(population/10^6, total))
+```
+the scale and lablels are defined by default when adding this layer. like dplyr functions, *aes* also uses the variable names from the object component: we can use *population* and *total* without having to call them as *murders$population* and *murders$total*. the behavior of recognizing the variables from the data component is quite specific to *aes*. with most functions, if you try to access the values of *population* or *total* outside of *aes* you receive an error.
+
+# 7.5 layers
+a second layer in the plot we wish to make involves adding a lable to each point to identify the state. the *geom_lable* and *geom_text* function permit us to add text to the plot with and without a rectangle begind the text, respectively. because each point (each state in this case) has a label, we need an aesthetic mapping to make the connection between points and labels. by reading the help file, we learn that we supply the mapping between point and label through the *label* argument of *aes*. so the code look like this:
+```{r}
+p + geom_point(aes(population/10^6, total))+geom_text(aes(population/10^6, total, label = abb))
+```
+we have successfully added a second layer to the plot.
+as an example of the unique behavior of *aes* mentioned above, note that this call:
+```{r}
+p_test<- p+ geom_text(aes(population/10^6, total, label= abb))
+```
+is fine, whereas this call:
+```{r}
+p_test<- p+ geom_text(aes(population/10^6, total), label= abb)
+```
+will give you an error since *abb* is not found because it is outside of the aes function. the layer *geom_text* does not know where to find *abb* since it is a column name and not a global variable.
+
+# 7.5.1 tinkering with arguments
+each geometry function has many arguments other than *aes* and *data*. they tend to secific the function. for example, in the plot we wish to make, the points are larger than the default size. in the help file we see that *size* is an aesthetic and we can change it like this:
+```{r}
+p+geom_point(aes(population/10^6, total), size=3)+ geom_text(aes(population/10^6, total, label= abb))
+```
+size is not a mapping: whereas mappings use data from specific observations and need to be inside aes(), operations we want to affect all the points the same way do not need to be included inside *aes*.
+now because the points are larger it is hard to see the lables. if we read the help file for *geom_text*, we see the *nudge_x* argument, which moves the text slightly to the right or to the left:
+```{r}
+p+geom_point(aes(population/10^6, total), size=3)+ geom_text(aes(population/10^6, total, label= abb), nudge_x = 2)
+```
+this is preferred as it makes it easier to read the text.
+
+# 7.6 global versus local aesthetic mappings
+
+in the previous line of code, we define the mapping *aes(population/10^6, total)* twice, once in each geometry. we can avoid this by using a global aesthetic mapping. we can do this when we define the blank slate ggplot object. remember that the function ggplot contains an argument that permits us to define aesthetic mappings:
+```{r}
+args(ggplot)
+```
+if we define a mapping in ggplot, all the geometries that are added as layers will default to this mapping. we redefine *p*:
+```{r}
+p<- murders %>% ggplot(aes(population/10^6, total, label= abb))
+```
+and then we can simply write the following code to produce the previous plot:
+
+```{r}
+p+geom_point(size=3)+geom_text(nudge_x = 2)
+```
+we keep the size and nudge_x arguments in geom_point and geom_text, respectively, because we want to only increase the size of points and only nudge the labels. if we put those arguments in *aes* then they would apply to both plots. also note that the geom_point function does not need a label argument and therefore ignores that aesthetic.
+if necessary, we can override the global mapping by defining a new mapping within each layer. these local definitions override the global. here is an example:
+```{r}
+p+geom_point(size=3)+geom_text(aes(x=10, y=800, label= "Hello there!"))
+```
+clearly, the second call to *geom_text* does not use *population* and *total*.
+
+# 7.7 scales
+first, our desired scales are in log-scale. this is not the default, so this change needs to be added through a scales layer. A quick look at the cheat sheet reveals the *scale_x_continuous* function lets us control the behavior of scales. we use them like this:
+```{r}
+p+geom_point(size=3)+geom_text(nudge_x = 0.05)+scale_x_continuous(trans= "log10")+ scale_y_continuous(trans = "log10")
+```
+because we are in the log-scale now, the nudge must be made smaller. this particular transformation is so common that ggplot2 provides the specialized functions *scale_x_log10* and *scale_y_log10*, which we can use to rewrite the code like this:
+```{r}
+p+ geom_point(size=3)+geom_text(nudge_x= 0.05)+scale_x_log10()+scale_y_log10()
+```
+
+# 7.8 labels and titles
+similarly, the cheat sheet quickly reveals that to change labels and add a title, we use the following functions:
+```{r}
+p+ geom_point(size=3)+geom_text(nudge_x= 0.05)+scale_x_log10()+scale_y_log10()+xlab("Populations in millions (log scale)")+ylab("Total number of murders (log scale")+ ggtitle("US Gun murders in 2010")
+```
+we are alomost there! all we have lefe to do is add color, a legend, and optional changes to the style.

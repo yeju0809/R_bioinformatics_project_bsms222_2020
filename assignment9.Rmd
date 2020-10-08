@@ -1,0 +1,233 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
+
+Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Ctrl+Shift+Enter*. 
+
+```{r}
+plot(cars)
+```
+
+Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Ctrl+Alt+I*.
+
+When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Ctrl+Shift+K* to preview the HTML file).
+
+The preview shows you a rendered HTML copy of the contents of the editor. Consequently, unlike *Knit*, *Preview* does not run any R code chunks. Instead, the output of the chunk when it was last run in the editor is displayed.
+
+# chapter8 visualizing data distributions
+
+we first discuss properties of a variety of distributions and how to visualize distributions using a movitating example of student heights. we then discuss the ggplot2 geometries for these visualizations.
+
+# 8.1 variable types
+
+we will be working with two types of variables: categorical and numeric. each can be divided into two other groups: categorical can be ordinal or not, whereas numerical variables can be discrete or continuous.
+when each entry in a vector comes from one of a small number of groups, we refer to the data as categorical data. two simple examples are sex and regions. some categorical data can be ordered even if they are not numbers per se, such as spiciness.
+we can further divide numerical data into continuous and discrete. continuous variables are those that con take any value, such as heights, if measured with enough precision.
+keep in mind that discrete numeric data can be considered ordinal. although this is technically true, we usually reserve the term ordinal data for cariables belonging to a small number of different groups, with each group having many members. in contrast, when we have many groups with few cases in each group, we typically refer to them as discrete numerical variables. 
+
+# 8.2 case study: describing student heights
+
+here we introduce a new motivating problem. it is an artificial one, but it will help us illustrate the concepts needed to understand distributions. 
+As a first step, we need to collect data. to do this, we ask students to report their heights in inches. we as them to pricvide sex information because we know there are two different distributions by sex. 
+```{r}
+library(tidyverse)
+library(dslabs)
+data(heights)
+```
+
+# 8.3 distribution function
+
+the average and the standard deviation are pretty much all we need to understand the data. we will learn data visualization techniques that will help us determine when this two number summary is appropriate. these same techniques will serve as a alternative for when two numbers are not enough.
+the most basic statistical summary of a list of objects or numbers is its distribution. the simplest way to think of a distribution is as a compact description of a list with many entries.
+
+we usually use barplots to display a few numbers. although this particular plot does not provide much more insight than a frequency table itself, it is a first example of how we convert a vector into a plot tht succintly summarizes all the information in the vector. when the data is numerical, the task of displaying distributions is more challenging.
+
+# 8.4 cumulative distribution functions
+
+numerical data that are not categorical also have distributions. in general, when data is not categorical, reporting the frequency of each entry is not an effective summary since most entires are unique. in our case study, while several students reported a height of 68 inches, only one student reported a height of 68.5039 inches and only one student reported a height 68.8976 inches. we assume that they converted from 174 and 175 centimeters, respectively. 
+
+the function is called the cumulative distribution function. 
+similar to what the frequency table does for categorical data, the CDF defines the distribution for numerical data. in fact, we can report the proportion of values between any two heights. say a and b, by computing F(b)-F(a).
+final note: because cdf can be defined mathematically the word empirical is added to make the distinction when data is used. we therefore use the term empirical CDF(eCDF).
+
+# 8.5 Histograms
+
+although the cdf concept is widely discussed in statistics, the plot is actually not very popular in practice. the main reason is that it does not easily convey characteristics of interest such as: at what value is the distribution centered? is the distribution symmetric? what ranges contain 95% of the values? histograms are much preffered because they greatly facilitate answering such questions.
+the simplest way to make a histogram is to divide the span of our data into non-overlapping bins of the same size. then, for each bin, we count the number of values that fall in that interval.
+as you can see in the figure above, a histogram is similar to a barplot, but is differs in that the x-axis is numerical, not categorical. the histogram above is not only easy to interpret, but also provides almost all the information contained in the raw list.
+what information do we lose? note that all values in each interval are treated the same when computing bin heights.
+
+# 8.6 smoothed density
+smoothed density plots are aesthetically more appealing than histograms. 
+in this plot, we no longer have sharp edges at the interval boundaries and many of the local peaks have been removed. also, the scale of the y-axis changed from counts to density.
+the main new concepy you must understand is that we assume that out list of observed values is a subset of a much larger list of unobserved values. in the case of heights, you can imagine that our list comes from a hypothetical list containing all the heights of all the male students in all the world measured very precisely. however, we make an assumption that helps us perhaps approximate it. the assumption is that if we show this, the height of consecutive bins will be similar. this is what we mean ny smooth: we don't have big jumps in the heights of consecutive bins.
+the smooth density is basically the curve that goes through the top of the histogram bars when the bins are very, very small. to make the curve not depend on the hypothetical size of the hypothetical list, we compute the curve on frequencies rather than counts
+In reality, we make a histogram, using bin sizes appropriate for our data and computing frequencies rather than counts, and we draw a smmoth curve that goes through the tops of the histofram bars. 
+however, remember that smooth is a relative term. we can actually control the smothness of the curve that defines tha smooth density through an option in the function that computes the smooth density curve. 
+we need to make this choice with care as the resulting visualizations can change our interpretation of the data. we should select a degree of smoothness that we can defend as being representative of the underlying data. 
+while the histogram is an assumption-free summary, the smoothed density is based on some assumptions.
+
+# 8.6.1 interpreting the y-axis
+note that interpreing the y-axis of a smooth density plot is not straightforward. it is scaled so that the area uder the density curve adds up to 1. if you imagine we form a bin with a base 1 unit in length, the y-axis value tells us the proportion of values in that bin, however, this is only true for bins of size 1. for other size intervals, the best way to determine the proportion of data in that interver is by computing the proportion of the total area contained in that interval.
+
+# 8.6.2 densities permit stratification
+
+as a final note, we point out that an advantage of smooth densities over histograms for visualization purposes is that denstiies make it easier to compare two distributions. this is in large part because the jagged edges of the histogram add clutter. 
+with the right argument, ggplot automatically shades the intersecting region with a different color.
+
+# 8.7 exercises
+1. in the murders dataset, the region is a categorical variable and the following is its distribution, to the closest 5%, what proportion of the states are in the North Central region?
+answer: about 0.23
+
+2. which of the following is true:
+answer: b( the graph above shows only four numbers with a bar plot)
+
+3. the plot below shows the eCDF for male height:
+based on the plot, what percentage of males are shorter than 75 inches?
+answer:b(95%)
+
+4. to the closest inch, what height m has the property that 1/2 of the male students are taller than m and 1/2 are shorter?
+answer: c
+
+5. knowing that there are 51 states and based on this plot, how many states have murder rates larger than 10 per 100,000 people?
+answer: a
+
+6. based on the eCDF above, which of the following statements are true:
+answer: d
+
+7. below is a histogram of male heights in our dataset, based on this plot, how many males are between 63.5 and 65.5?
+answer: b
+
+8. about what percentage are shorter than 60 inches?
+answer: a
+
+9 based on the density plot below, about what proportion of US states have populations larger than 10 milion?
+answer: b
+
+10. below are three density plots. is it possible that they are from the same dataset?
+which of the following statements if true?
+answer: d
+
+# 8.8 the normal distribution
+
+the normal distribution is one of the most famous mathematical concepts in history. a reason for this is that approximately normal distributions occur in many situations, including gambling winnings, heights, weights, blood pressure, stanardized test scores, and experimental measurement errors. there are explanations for this, but we describe these later. 
+rather than using data, the normal distribution is defined with a mathematical formula. for any interval(a,b), the proportion of values in that interval can be computed using this formula:
+```
+Pr(a<x<b)=integral(a,b)1/sqrt(2pi)*s *e^(x-m/s)^2/2
+```
+you don't need to memorize or understand the details of the formula. but note that itis completely defined by just two parameters: m and s. the rest of the symbols in the formula represent the interval ends that we determine, a and b. and known mathematical constants pi and e. these two parameters, m and s, are referred to as the average and the standard deviation of the distribution, respectively.
+the distribution is symmetric, centered at the average, and most balues are within 2 SD from the average. the fact that the distribution is defined by just two parameters implies that if a dataset is approximated by a normal distribution, all the information needed to describe the distribution can be encoded in just two numbers: the average and the standard deviation. we now define these values for an arbitrary list of numbers.
+
+for a list of numbers contained in a vector x, the average is defined as:
+```
+m<- sum(x)/length(x)
+```
+and the SD is defined as:
+```
+s<- sqrt(sum((x-mu)^2)/length(x))
+```
+which can be interpreted as the average distance between values and thier average.
+lets compute the values for the height for males which we will store in the oject x:
+```{r}
+index<- heights$sex == "Male"
+x<-heights$height[index]
+```
+the pre-built function *mean* and *sd* can be used here:
+```{r}
+m<- mean(x)
+s<- sd(x)
+c(average = m, sd = s)
+```
+here is a plot of the smooth density and the normal distribution with mean=69.3 and sd-3.6 plotted as a black line with out student height smooth density in blue;
+the normal distribution does appear to be quite a good approximation here. we now will see how well this approximation works at predicting the proportion of values within intervals.
+
+# 8.9 standard units
+for data that is approximately normally distributed, it is convenient to think in terms of standard units. the standard unit of a value tells us how many standard deviations away from the average it is. specifically, for a value *x* from a vector *x*, we define the value of x in standard units as *z=(x-m)/s* with m and s the average and standard deviation of x, respectively. 
+first look back at the formula for the normal distribution and note that what is being exponentiated is -z^2/2 with z equivalent to x in standard units. because the maxinun of e^-z^2/2 is when z=0. this explains why the maximum of the distribution occurs at the average. it also explains the symmetry since -z^2/2 is symmetric around 0. second, note that if we convert the normally distributed data to standard units, we can quickly know if, for example, a person is about average, one of the largest, one of the smallest, or an extremely rare occurrence. remember that it does not matter what the original units are, these rules apply to any data that is approximately normal.
+in R we can obtain standard units the function *scale*:
+```{r}
+z<- scale(x)
+```
+
+now to see how many men are within 2SDs from the average, we simply type:
+```{r}
+mean(abs(z)<2)
+```
+
+the proportion is about 95% which is what the normal distribution predicts.
+
+# 8.10 quantile-quantile plots
+
+a systematic way to assess how well the normal distribution fits the data is to check if the observed and predicted proportions match. in general, this is the approach of the quantile-quantile plot(QQplot).
+first let's define the theoretical quantiles for the normal distribution. we use the symbol to define the function that gives us the probability of a standard normal distribution being smaller than x. we can evaluate using the *pnorm* function:
+```{r}
+pnorm(-1.96)
+```
+the inverse function gives us the theoretical quantiles for the normal distribution. we can evaluate the inverse using the *qnorm* function.
+```{r}
+qnorm(0.975)
+```
+note that these calculations are for the standad normal distribution by default but we cal also define for any normal distribution. 
+```{r}
+qnorm(0.975, mean = 5, sd = 2)
+```
+for the normal distribution, all the calculations related to quantiles are done without data, thus the name theoretical quantiles. but quantiles can be defined for any distribution, including an empirical one. so if we have data in a vector x, we can define the quantile associated with any proportion p as the q for which the proportion of values below q is p. using R code, we can define q as the value for which *mean(x<=q)=p*. notice that not all p have a q for which the proportion is examtly p. there are several ways of defining the best q as discussed in the help for the *quantile* funciton.
+
+to give a quick example, for the male heights data:
+```{r}
+mean(x<=69.5)
+```
+so about 50% are shorter or equal to 69 inches. this implies that if p=o.50 then q=69.5.
+
+the idea of a qqplot is that if your data is well approximated by normal distribution then the quantiles of your data should be similar to the quantiles of a normal distribution. to construct a qqplot, we do the following:
+1. define a vector of m proportions p1, p2, ... ,pm.
+2. define a vector of quantiles for your data for the proportions, we refer to these as the sample quantiles.
+3. define a vector of theoretical quantiles for the proportions for a normal distribution with the same average and standard deviation as the data.
+4. plot the sample quantiles versus the theoretical quantiles.
+
+lets construct a qqplot using R code. start by defining the vector of proportions.
+```{r}
+p<- seq(0.05, 0.95, 0.05)
+```
+to obtain the quantiles from the data, we can use the *quantile* function like this:
+```{r}
+sample_quantiles<- quantile(x, p)
+```
+to obtain the theoretical normal distribution quantiles with the corresponding average and SD, we use the *qnorm* function:
+```{r}
+theoretical_quantiles<- qnorm(p, mean = mean(x), sd= sd(x))
+```
+to see if they match or not we plot them against each other and draw the identity line:
+```{r}
+qplot(theoretical_quantiles, sample_quantiles)+geom_abline()
+```
+
+notice that this code becomes much cleaner if we use standard units:
+```{r}
+sample_quantiles<- quantile(z,p)
+theoretical_quantiles<- qnorm(p)
+qplot(theoretical_quantiles, sample_quantiles)+geom_abline()
+```
+the above code is included to help describe qqplots. however, in practive it is easier to use the ggplot2 code.
+```{r}
+heights %>% filter(sex== "Male") %>% ggplot(aes(sample= scale(height))) +geom_qq()+ geom_abline()
+```
+while for the illustration above we used 20 quantiles, the default from the *geom_qq* function is to use as many quantiles as data points.
+
+# 8.11 percentiles
+
+before we move on, lets define some terms that are commonly used in exploratory data analysis.
+percentiles are special cases of quantiles that are commonly used. the percentiles are the quantiles you obtain when setting the p 0.01 0.02 ,,, 0.99. we call for example, the case of p=0.25 the 25th percentile, which gives us a number for which 25% of the data is below. the most famous percentile is the 50th, also known as the median.
+
+for the normal distribution the median and average are the same, but this is generally not the case.
+another special case that recieves a name are the quartiles, which are obtained when setting p=0.25, 0.5, 0.75.
+
+# 8.12 boxplots
+to introduce boxplots we will go back to the US murder data. suppose we want to summarize the murder rate distribution. using the data visualization technique we have learned, we can quickly see that the normal approximation does not apply here:
+in this case, the histogram above or a smooth density plot would serve as a relatively succinct summary. now suppose those used to receiving just two numbers as summaries ask us for a more compact numerical summary.
+tukey further suggested that we ignore outliers when computing the range and instead plot these as independent points. we provide a detailed explanation of outliers later. finally, he suggested we plot these numbers as a box with whiskers like this.
+with the box defined by the 25% and 75% percentile and the whiskers showing the range. the distance between these two is called the interquartile range. the two points are outliers according to tudey's definition. the median is shown with a horizontal line. today, we call these boxplots. 
+from just this simple plot, we know that the median is about 2.5, that the distribution is not symmetric, and that the range is 0 to 5 for the great majority of states with two exceptions.
